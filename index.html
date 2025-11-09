@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 60px 40px;
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 3em;
+            margin-bottom: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .welcome-message {
+            color: #555;
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 1.5em;
+            margin-top: 20px;
+        }
+
+        .decorative-line {
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 30px auto;
+            border-radius: 2px;
+        }
+
+        .icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+
+        #chart,
+        #chart2,
+        #chart3 {
+            margin: 30px auto;
+            width: 100%;
+            max-width: 650px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 10px;
+            background-color: #ffffff;
+        }
+
+
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .container {
+                padding: 40px 20px;
+            }
+
+            .welcome-message {
+                font-size: 1em;
+            }
+
+            #chart,
+            #chart2,
+            #chart3 {
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="icon">👋</div>
+        <h1>Welcome!</h1>
+        <div class="decorative-line"></div>
+        <p class="welcome-message">
+            Thank you for visiting. We're glad to have you here!</br>
+            Have a wonderful day!</br></br>
+        </p>
+        <p class="subtitle">
+            My visualisations:
+        </p>
+        <div id="chart"></div>
+        <div id="chart2"></div>
+        <div id="chart3"></div>
+    </div>
+    <script>
+
+        const spec = {
+            "$schema": "https://vega.github.io/schema/vega/v6.json",
+            "description": "A basic stacked bar chart example.",
+            "width": 400,
+            "height": 250,
+            "padding": 5,
+            "title": {
+                "text": "Stacked Bar Chart",
+                "anchor": "middle",
+                "color": "#764ba2"
+            },
+
+            "data": [
+                {
+                    "name": "table",
+                    "values": [
+                        { "x": 0, "y": 28, "c": 0 }, { "x": 0, "y": 55, "c": 1 },
+                        { "x": 1, "y": 43, "c": 0 }, { "x": 1, "y": 91, "c": 1 },
+                        { "x": 2, "y": 81, "c": 0 }, { "x": 2, "y": 53, "c": 1 },
+                        { "x": 3, "y": 19, "c": 0 }, { "x": 3, "y": 87, "c": 1 },
+                        { "x": 4, "y": 52, "c": 0 }, { "x": 4, "y": 48, "c": 1 },
+                        { "x": 5, "y": 24, "c": 0 }, { "x": 5, "y": 49, "c": 1 },
+                        { "x": 6, "y": 87, "c": 0 }, { "x": 6, "y": 66, "c": 1 },
+                        { "x": 7, "y": 17, "c": 0 }, { "x": 7, "y": 27, "c": 1 },
+                        { "x": "A", "y": 68, "c": 0 }, { "x": "A", "y": 16, "c": 1 },
+                        { "x": "B", "y": 49, "c": 0 }, { "x": "B", "y": 15, "c": 1 }
+                    ],
+                    "transform": [
+                        {
+                            "type": "stack",
+                            "groupby": ["x"],
+                            "sort": { "field": "c" },
+                            "field": "y"
+                        }
+                    ]
+                }
+            ],
+
+            "scales": [
+                { "name": "x", "type": "band", "range": "width", "domain": { "data": "table", "field": "x" } },
+                { "name": "y", "type": "linear", "range": "height", "nice": true, "zero": true, "domain": { "data": "table", "field": "y1" } },
+                {
+                    "name": "color",
+                    "type": "ordinal",
+                    "range": ["#667eea", "#764ba2"],
+                    "domain": { "data": "table", "field": "c" }
+                }
+            ],
+
+            "axes": [
+                { "orient": "bottom", "scale": "x", "zindex": 1, "domainColor": "#aaaaaa" },
+                { "orient": "left", "scale": "y", "zindex": 1, "domainColor": "#aaaaaa" }
+            ],
+
+            "marks": [
+                {
+                    "type": "rect",
+                    "from": { "data": "table" },
+                    "encode": {
+                        "enter": {
+                            "x": { "scale": "x", "field": "x" },
+                            "width": { "scale": "x", "band": 1, "offset": -1 },
+                            "y": { "scale": "y", "field": "y0" },
+                            "y2": { "scale": "y", "field": "y1" },
+                            "fill": { "scale": "color", "field": "c" }
+                        },
+                        "update": {
+                            "fillOpacity": { "value": 1 }
+                        },
+                        "hover": {
+                            "fillOpacity": { "value": 0.7 }
+                        }
+                    }
+                }
+            ]
+        };
+
+
+        const spec2 = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "data": { "url": "https://vega.github.io/editor/data/movies.json" },
+            "title": {
+                "text": "Heatmap: Correlation of Ratings",
+                "anchor": "middle",
+                "color": "#764ba2"
+            },
+            "transform": [{
+                "filter": {
+                    "and": [
+                        { "field": "IMDB Rating", "valid": true },
+                        { "field": "Rotten Tomatoes Rating", "valid": true }
+                    ]
+                }
+            }],
+            "mark": "rect",
+            "width": 400,
+            "height": 250,
+            "encoding": {
+                "x": {
+                    "bin": { "maxbins": 60 },
+                    "field": "IMDB Rating",
+                    "type": "quantitative"
+                },
+                "y": {
+                    "bin": { "maxbins": 40 },
+                    "field": "Rotten Tomatoes Rating",
+                    "type": "quantitative"
+                },
+                "color": {
+                    "aggregate": "count",
+                    "type": "quantitative",
+                    "title": "Records",
+                    "scale": { "scheme": "bluepurple" }
+                }
+            },
+            "config": {
+                "view": { "stroke": "transparent" },
+                "axis": { "grid": false, "labelColor": "#555", "titleColor": "#764ba2" }
+            }
+        };
+
+
+        const spec3 = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "description": "Google's stock price over time.",
+            "data": { "url": "https://vega.github.io/editor/data/stocks.csv" },
+            "transform": [{ "filter": "datum.symbol==='GOOG'" }],
+            "title": {
+                "text": "Time-series Chart: Google Stock Price",
+                "anchor": "middle",
+                "color": "#764ba2"
+            },
+            "mark": {
+                "type": "line",
+                "strokeWidth": 3
+            },
+            "width": 400,
+            "height": 250,
+            "encoding": {
+                "x": { "field": "date", "type": "temporal", "axis": { "title": "Date" } },
+                "y": { "field": "price", "type": "quantitative", "axis": { "title": "Price" } },
+
+                "color": { "value": "#667eea" },
+                "tooltip": [
+                    { "field": "date", "type": "temporal", "title": "Date" },
+                    { "field": "price", "type": "quantitative", "title": "Price" }
+                ]
+            },
+            "config": {
+
+                "view": { "stroke": "transparent" },
+                "axis": { "grid": true, "gridColor": "#ddd", "labelColor": "#555", "titleColor": "#764ba2" }
+            }
+        };
+
+
+
+        const embedOptions = {
+            actions: false,
+            renderer: "svg"
+        };
+
+        vegaEmbed("#chart", spec);
+        vegaEmbed("#chart2", spec2);
+        vegaEmbed("#chart3", spec3); 
+    </script>
+</body>
+
+</html>
