@@ -1,325 +1,997 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="hu">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome</title>
-    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <meta charset="UTF-8">
+  <title>Reading Insights – Adatvezérelt irodalmi elemzés</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <!-- Vega -->
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 40px 20px;
-        }
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: #f4f1ee;
+      color: #2b2b2b;
+      line-height: 1.6;
+    }
 
-        .container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            padding: 60px 40px;
-            text-align: center;
-            max-width: 800px;
-            width: 100%;
-            animation: fadeIn 1s ease-in;
-        }
+    /* ===== HERO ===== */
+    .hero {
+      background:
+        linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
+       url("books.jpg");
+      background-size: cover;
+      background-position: center;
+      padding: 120px 20px;
+      color: white;
+      text-align: center;
+    }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
+    .hero h1 {
+      font-size: 3em;
+      margin-bottom: 20px;
+    }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    .hero p {
+      font-size: 1.2em;
+      opacity: 0.9;
+      max-width: 800px;
+      margin: auto;
+    }
 
-        h1 {
-            color: #667eea;
-            font-size: 3em;
-            margin-bottom: 20px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+    /* ===== NAV ===== */
+    nav {
+      background: white;
+      padding: 15px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
 
-        .welcome-message {
-            color: #555;
-            font-size: 1.2em;
-            line-height: 1.6;
-            margin-bottom: 30px;
-        }
+    nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: #6f4e37;
+      font-weight: 500;
+    }
 
-        .subtitle {
-            color: #888;
-            font-size: 1.5em;
-            margin-top: 20px;
-        }
+    /* ===== SECTIONS ===== */
+    section {
+      padding: 80px 20px;
+    }
 
-        .decorative-line {
-            width: 100px;
-            height: 4px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            margin: 30px auto;
-            border-radius: 2px;
-        }
+    section:nth-child(even) {
+      background: #fff;
+    }
 
-        .icon {
-            font-size: 4em;
-            margin-bottom: 20px;
-            animation: bounce 2s infinite;
-        }
+    .container {
+      max-width: 1200px;
+      margin: auto;
+    }
 
-        @keyframes bounce {
+    h2, h3 {
+      font-size: 2em;
+      margin-bottom: 20px;
+      color: #4a2c2a;
+    }
 
-            0%,
-            100% {
-                transform: translateY(0);
-            }
+    /* ===== CHART CARD ===== */
+    .chart {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 14px 35px rgba(0,0,0,0.15);
+      min-height: 520px;
+    }
 
-            50% {
-                transform: translateY(-10px);
-            }
-        }
+    /* ===== CHART + TEXT ===== */
+    .chart-with-text {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  margin-bottom: 120px; /* EZ A LÉNYEG */
+}
 
+    .chart-with-text .chart {
+      flex: 3;
+    }
 
-        #chart,
-        #chart2,
-        #chart3 {
-            margin: 30px auto;
-            width: 100%;
-            max-width: 650px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 10px;
-            background-color: #ffffff;
-        }
+    .chart-with-text .insight {
+      flex: 2;
+      font-style: italic;
+      color: #555;
+    }
 
+    .quote {
+      font-style: italic;
+      font-size: 1.2em;
+      color: #555;
+      margin: 40px 0;
+    }
 
+    footer {
+      background: #2b2b2b;
+      color: #ddd;
+      text-align: center;
+      padding: 40px 20px;
+    }
 
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 2em;
-            }
-
-            .container {
-                padding: 40px 20px;
-            }
-
-            .welcome-message {
-                font-size: 1em;
-            }
-
-            #chart,
-            #chart2,
-            #chart3 {
-                margin-top: 20px;
-            }
-        }
-    </style>
+    
+  </style>
 </head>
 
 <body>
-    <div class="container">
-        <div class="icon">👋</div>
-        <h1>Welcome!</h1>
-        <div class="decorative-line"></div>
-        <p class="welcome-message">
-            Thank you for visiting. We're glad to have you here!</br>
-            Have a wonderful day!</br></br>
-        </p>
-        <p class="subtitle">
-            My visualisations:
-        </p>
-        <div id="chart"></div>
-        <div id="chart2"></div>
-        <div id="chart3"></div>
+
+<!-- HERO -->
+<header class="hero">
+  <h1>Reading Insights</h1>
+  <p>
+    Egy adatvezérelt irodalmi esszé az olvasásról,
+    az emberekről és a könyvek mögötti mintázatokról.
+  </p>
+</header>
+
+<nav>
+  <a href="#intro">Bevezetés</a>
+  <a href="#charts">Elemzések</a>
+  <a href="#conclusion">Tanulságok</a>
+</nav>
+
+<!-- INTRO -->
+<section id="intro">
+  <div class="container">
+    <h2>Bevezetés – Az olvasás mint adat</h2>
+    <p>
+      Az olvasás általában egyéni cselekedet. Mégis, amikor sok ezer olvasó
+      szokásait vizsgáljuk, társadalmi mintázatok rajzolódnak ki.
+    </p>
+
+    <div class="quote">
+      „Mondd meg, mit olvasol, és megmondom, ki vagy.”
     </div>
-    <script>
-
-        const spec = {
-            "$schema": "https://vega.github.io/schema/vega/v6.json",
-            "description": "A basic stacked bar chart example.",
-            "width": 400,
-            "height": 250,
-            "padding": 5,
-            "title": {
-                "text": "Stacked Bar Chart",
-                "anchor": "middle",
-                "color": "#764ba2"
-            },
-
-            "data": [
-                {
-                    "name": "table",
-                    "values": [
-                        { "x": 0, "y": 28, "c": 0 }, { "x": 0, "y": 55, "c": 1 },
-                        { "x": 1, "y": 43, "c": 0 }, { "x": 1, "y": 91, "c": 1 },
-                        { "x": 2, "y": 81, "c": 0 }, { "x": 2, "y": 53, "c": 1 },
-                        { "x": 3, "y": 19, "c": 0 }, { "x": 3, "y": 87, "c": 1 },
-                        { "x": 4, "y": 52, "c": 0 }, { "x": 4, "y": 48, "c": 1 },
-                        { "x": 5, "y": 24, "c": 0 }, { "x": 5, "y": 49, "c": 1 },
-                        { "x": 6, "y": 87, "c": 0 }, { "x": 6, "y": 66, "c": 1 },
-                        { "x": 7, "y": 17, "c": 0 }, { "x": 7, "y": 27, "c": 1 },
-                        { "x": "A", "y": 68, "c": 0 }, { "x": "A", "y": 16, "c": 1 },
-                        { "x": "B", "y": 49, "c": 0 }, { "x": "B", "y": 15, "c": 1 }
-                    ],
-                    "transform": [
-                        {
-                            "type": "stack",
-                            "groupby": ["x"],
-                            "sort": { "field": "c" },
-                            "field": "y"
-                        }
-                    ]
-                }
-            ],
-
-            "scales": [
-                { "name": "x", "type": "band", "range": "width", "domain": { "data": "table", "field": "x" } },
-                { "name": "y", "type": "linear", "range": "height", "nice": true, "zero": true, "domain": { "data": "table", "field": "y1" } },
-                {
-                    "name": "color",
-                    "type": "ordinal",
-                    "range": ["#667eea", "#764ba2"],
-                    "domain": { "data": "table", "field": "c" }
-                }
-            ],
-
-            "axes": [
-                { "orient": "bottom", "scale": "x", "zindex": 1, "domainColor": "#aaaaaa" },
-                { "orient": "left", "scale": "y", "zindex": 1, "domainColor": "#aaaaaa" }
-            ],
-
-            "marks": [
-                {
-                    "type": "rect",
-                    "from": { "data": "table" },
-                    "encode": {
-                        "enter": {
-                            "x": { "scale": "x", "field": "x" },
-                            "width": { "scale": "x", "band": 1, "offset": -1 },
-                            "y": { "scale": "y", "field": "y0" },
-                            "y2": { "scale": "y", "field": "y1" },
-                            "fill": { "scale": "color", "field": "c" }
-                        },
-                        "update": {
-                            "fillOpacity": { "value": 1 }
-                        },
-                        "hover": {
-                            "fillOpacity": { "value": 0.7 }
-                        }
-                    }
-                }
-            ]
-        };
+  </div>
+</section>
 
 
-        const spec2 = {
-            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-            "data": { "url": "https://vega.github.io/editor/data/movies.json" },
-            "title": {
-                "text": "Heatmap: Correlation of Ratings",
-                "anchor": "middle",
-                "color": "#764ba2"
-            },
-            "transform": [{
-                "filter": {
-                    "and": [
-                        { "field": "IMDB Rating", "valid": true },
-                        { "field": "Rotten Tomatoes Rating", "valid": true }
-                    ]
-                }
-            }],
-            "mark": "rect",
-            "width": 400,
-            "height": 250,
-            "encoding": {
-                "x": {
-                    "bin": { "maxbins": 60 },
-                    "field": "IMDB Rating",
-                    "type": "quantitative"
-                },
-                "y": {
-                    "bin": { "maxbins": 40 },
-                    "field": "Rotten Tomatoes Rating",
-                    "type": "quantitative"
-                },
-                "color": {
-                    "aggregate": "count",
-                    "type": "quantitative",
-                    "title": "Records",
-                    "scale": { "scheme": "bluepurple" }
-                }
-            },
-            "config": {
-                "view": { "stroke": "transparent" },
-                "axis": { "grid": false, "labelColor": "#555", "titleColor": "#764ba2" }
-            }
-        };
+<section id="business-problem">
+  <div class="container">
+    <h2>Üzleti probléma – Milyen kérdésekre keresünk választ?</h2>
+
+    <p>
+      A könyvpiac – legyen szó kiadókról, könyvesboltokról vagy digitális
+      tartalomszolgáltatókról – folyamatosan változó olvasói szokásokkal
+      szembesül. Az üzleti döntések egyre kevésbé alapulhatnak megérzéseken;
+      szükség van adatvezérelt megértésre.
+    </p>
+
+    <p>
+      Az alábbi elemzés célja, hogy választ adjon azokra a kulcskérdésekre,
+      amelyek egy könyvpiaci szereplő számára stratégiai jelentőségűek.
+    </p>
+
+    <ul>
+      <li>
+        <strong>Kik alkotják a legaktívabb olvasói rétegeket?</strong><br>
+        Mely életkorú, nemű és társadalmi hátterű csoportok olvasnak a legtöbbet,
+        és hol találhatók a legnagyobb eléréssel kecsegtető célcsoportok?
+      </li>
+
+      <li>
+        <strong>Milyen társadalmi tényezők befolyásolják az olvasási intenzitást?</strong><br>
+        Hogyan függ össze az olvasott könyvek száma a jövedelemmel, a végzettséggel,
+        a foglalkoztatottsággal vagy a családi állapottal?
+      </li>
+
+      <li>
+        <strong>Hogyan változik az olvasási formátum az életkor és a jövedelem mentén?</strong><br>
+        Mely korosztályok és társadalmi csoportok preferálják a nyomtatott könyveket,
+        az e-könyveket vagy a hangoskönyveket?
+      </li>
+
+      <li>
+        <strong>Hol találhatók a nem olvasó vagy alulaktivált csoportok?</strong><br>
+        Mely demográfiai szegmensekben a legmagasabb azok aránya,
+        akik egyáltalán nem olvasnak könyveket?
+      </li>
+
+      <li>
+        <strong>Milyen üzleti és kulturális lehetőségek rejlenek az adatokban?</strong><br>
+        Hogyan használhatók fel ezek az információk célzott marketingkampányok,
+        tartalomfejlesztés vagy olvasásnépszerűsítő programok tervezéséhez?
+      </li>
+    </ul>
+
+    <p class="quote">
+      Az alábbi vizualizációk ezekre a kérdésekre adnak részleges, de
+      adatvezérelt válaszokat, feltárva az olvasási szokások mögötti
+      társadalmi mintázatokat.
+    </p>
+  </div>
+</section>
+
+<!-- CHARTS -->
+<section id="charts">
+  <div class="container">
+
+    <!-- 1 -->
+    <h3>Életkor és nem szerinti eloszlás</h3>
+    <div class="chart-with-text">
+      <div id="chart1" class="chart"></div>
+      <p class="insight">
+        Az olvasás minden életkorban jelen van,
+         de az egyes korcsoportokban eltérő nemi arányok figyelhetők meg, ami a célzott tartalomfejlesztés szempontjából releváns.
+      </p>
+    </div>
+
+    <!-- 2 -->
+    <h3>Jövedelem és végzettség kapcsolata</h3>
+    <div class="chart-with-text">
+      <div id="chart2" class="chart"></div>
+      <p class="insight">
+        A magasabb jövedelmi sávokban erősebben jelennek meg 
+        a felsőfokú végzettségű olvasók, ami megerősíti az oktatás és kulturális fogyasztás kapcsolatát.
+      </p>
+    </div>
+
+    <!-- 3 -->
+    <h3>Olvasási formátumok kor és jövedelem szerint</h3>
+    <div class="chart-with-text">
+      <div id="chart3" class="chart"></div>
+      <p class="insight">
+       Az olvasási formátum választása demográfiai mintázatot követ, és itt is a középkorosztály a kiemelkedő.
+      </p>
+    </div>
+
+    <!-- 4 -->
+    <h3>Hírek és magazinok olvasása életkoronként</h3>
+    <div class="chart-with-text">
+      <div id="chart4" class="chart"></div>
+      <p class="insight">
+        A hírfogyasztás erősen korfüggő, míg a 
+        magazinolvasás kiegyenlítettebb mintázatot mutat az életkorok között.
+      </p>
+    </div>
+
+    <!-- 5 -->
+    <h3>Könyvbeszerzési források jövedelem szerint</h3>
+    <div class="chart-with-text">
+      <div id="chart5" class="chart"></div>
+      <p class="insight">
+        A jövedelem növekedésével nő a vásárlás aránya, 
+        míg az alacsonyabb jövedelmű csoportok inkább alternatív beszerzési formákat használnak.
+      </p>
+    </div>
+
+    <!-- 6 -->
+   
+    <h3>Életkor és etnikai hátter</h3>
+    <div class="chart-with-text">
+      <div id="chart6" class="chart"></div>
+      <p class="insight">
+        Az olvasási mintázatok etnikai és generációs 
+        különbségeket is tükröznek, amelyek fontos társadalmi kontextust adnak az adatok értelmezéséhez.
+      </p>
+    </div>
+
+    <!-- 7 -->
+    <h3>Családi állapot és foglalkoztatottság - Társadalmi mátrix</h3>
+    <div class="chart-with-text">
+      <div id="chart7" class="chart"></div>
+      <p class="insight">
+       A stabil munkahely és családi háttér gyakran magasabb olvasási aktivitással jár együtt.
+      </p>
+    </div>
 
 
-        const spec3 = {
-            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-            "description": "Google's stock price over time.",
-            "data": { "url": "https://vega.github.io/editor/data/stocks.csv" },
-            "transform": [{ "filter": "datum.symbol==='GOOG'" }],
-            "title": {
-                "text": "Time-series Chart: Google Stock Price",
-                "anchor": "middle",
-                "color": "#764ba2"
-            },
-            "mark": {
-                "type": "line",
-                "strokeWidth": 3
-            },
-            "width": 400,
-            "height": 250,
-            "encoding": {
-                "x": { "field": "date", "type": "temporal", "axis": { "title": "Date" } },
-                "y": { "field": "price", "type": "quantitative", "axis": { "title": "Price" } },
+       <!-- 8 -->
 
-                "color": { "value": "#667eea" },
-                "tooltip": [
-                    { "field": "date", "type": "temporal", "title": "Date" },
-                    { "field": "price", "type": "quantitative", "title": "Price" }
-                ]
-            },
-            "config": {
+    <h3>Etnikum és átlagos olvasási mennyiség</h3>
+    <div class="chart-with-text">
+      <div id="chart8" class="chart"></div>
+      <p class="insight">
+       Az olvasási intenzitás etnikai csoportonként eltér, 
+       ami kulturális és hozzáférési különbségekre utalhat.
+      </p>
+    </div>
 
-                "view": { "stroke": "transparent" },
-                "axis": { "grid": true, "gridColor": "#ddd", "labelColor": "#555", "titleColor": "#764ba2" }
-            }
-        };
+    <!-- 9 -->
+    <h3>Ki olvas és ki nem?</h3>
+    <div class="chart-with-text">
+      <div id="chart9" class="chart"></div>
+      <p class="insight">
+        Az alacsonyabb végzettségű csoportokban magasabb 
+        a nem olvasók aránya, ami fontos célcsoport lehet az olvasásnépszerűsítő programok számára.
+      </p>
+    </div>
+
+   
+
+<!-- 10 -->
+    <h3>Kor es olvasasi formátum</h3>
+    <div class="chart-with-text">
+      <div id="chart10" class="chart"></div>
+      <p class="insight">
+        A különböző olvasási formátumok eltérő életkori profillal 
+        rendelkeznek: az e-könyvek fiatalabb, míg a hangoskönyvek idősebb korosztályban dominálnak.
+      </p>
+    </div>
+
+
+  </div>
+</section>
+
+<section id="conclusion">
+  <div class="container">
+    <h2>Tanulságok</h2>
+    <ul>
+      <li>Az olvasás erősen társadalmi és demográfiai jelenség.</li>
+      <li>A jövedelem és végzettség meghatározza az olvasási intenzitást.</li>
+      <li>A formátumválasztás generációs mintázatot követ.</li>
+      <li>Az adatok segíthetnek célzott kulturális és üzleti döntésekben, amelyek ehhez a szakterülethez kapcsolódnak, és nem csak.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  Reading Insights · Adatvezérelt irodalmi elemzés · 2026
+</footer>
+
+
+<script>
+const dataUrl =
+"https://raw.githubusercontent.com/laczandrea/read/refs/heads/main/BigML_Dataset_5f50a62795a9306aa200003e.csv";
+
+/* 1. Életkor eloszlás – irodalmi histogram */
+const chart1 = {
+  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+
+  width: 700,
+  height: 350,
+
+  data: {
+    url: dataUrl,
+    format: { type: "csv" }
+  },
+
+  mark: {
+    type: "bar",
+    opacity: 0.85
+  },
+
+  encoding: {
+    x: {
+      field: "Age",
+      type: "quantitative",
+      bin: { maxbins: 15 },
+      title: "Életkor"
+    },
+
+    y: {
+      aggregate: "count",
+      type: "quantitative",
+      title: "Olvasók száma"
+    },
+
+    color: {
+      field: "Sex",
+      type: "nominal",
+      title: "Nem",
+      scale: {
+        range: ["#c1a36e", "#6a5d4d", "#d0c4a8"]
+      },
+      legend: {
+        orient: "top"
+      }
+    },
+
+    tooltip: [
+      { field: "Sex", type: "nominal", title: "Nem" },
+      { aggregate: "count", type: "quantitative", title: "Olvasók száma" }
+    ]
+  },
+
+  config: {
+    view: {
+      stroke: null
+    },
+    axis: {
+      labelFont: "Georgia",
+      titleFont: "Georgia",
+      labelColor: "#4a4a4a",
+      titleColor: "#2b2b2b"
+    },
+    legend: {
+      labelFont: "Georgia",
+      titleFont: "Georgia"
+    }
+  }
+};
+
+
+const incomeOrder = [
+    "< $10,000",
+    "$10,000 to $19,999",
+    "$20,000 to $29,999",
+    "$30,000 to $39,999",
+    "$40,000 to $49,999",
+    "$50,000 to $74,999",
+    "$75,000 to $99,999",
+    "$100,000 to $149,999",
+    "$150,000+",
+    "Refused"
+];
+
+
+/* 2. Jövedelmi sávok × végzettségi szint – Halmozott területdiagram */
+const chart2 = {
+  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+  width: 700,
+  height: 320,
+  data: { url: dataUrl, format: { type: "csv" } },
+  transform: [
+    {
+      calculate: "indexof(datum.Incomes, '150000') >= 0 ? '$150,000+' : datum.Incomes",
+      as: "IncomeClean"
+    },
+    { 
+      aggregate: [{ op: "count", as: "count" }], 
+      groupby: ["IncomeClean", "Education"] 
+    }
+  ],
+  mark: { type: "area", interpolate: "monotone", opacity: 0.8 },
+  encoding: {
+    x: {
+      field: "IncomeClean",
+      type: "nominal",
+      title: "Jövedelmi sávok",
+      sort: [
+        "< $10,000",
+        "$10,000 to $19,999",
+        "$20,000 to $29,999",
+        "$30,000 to $39,999",
+        "$40,000 to $49,999",
+        "$50,000 to $74,999",
+        "$75,000 to $99,999",
+        "$100,000 to $149,999",
+        "$150,000+",
+        "Refused"
+      ],
+      axis: { labelAngle: -30 }
+    },
+    y: { 
+      field: "count", 
+      type: "quantitative", 
+      stack: true, // "center" helyett true, hogy látszódjon a darabszám az Y tengelyen
+      title: "Olvasók száma" 
+    },
+    color: {
+      field: "Education",
+      type: "nominal",
+      title: "Végzettségi szint",
+      scale: { scheme: "browns" }
+    },
+    tooltip: [
+      { field: "IncomeClean", type: "nominal", title: "Jövedelmi sáv" },
+      { field: "Education", type: "nominal", title: "Végzettség" },
+      { field: "count", type: "quantitative", title: "Olvasók száma" }
+    ]
+  },
+  config: {
+    view: { stroke: null },
+    axis: { 
+      labelFont: "Georgia", 
+      titleFont: "Georgia", 
+      labelColor: "#4a4a4a", 
+      titleColor: "#2b2b2b" 
+    }
+  }
+};
+
+/* 3. Kor × jövedelem × olvasási formátum – bubble plot (SZŰRHETŐ) */
+const chart3 = {
+  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+  width: 700,
+  height: 400,
+
+  data: {
+    url: dataUrl,
+    format: { type: "csv" }
+  },
+
+  /* === VÁLASZTÓ GOMBOK === */
+  params: [
+    {
+      name: "FormatValaszto",
+      value: null,
+      bind: {
+        input: "radio",
+        options: [null, "Papír alapú", "E-könyv", "Hangoskönyv"],
+        labels: ["Mind", "Papír alapú", "E-könyv", "Hangoskönyv"],
+        name: "Olvasási formátum: "
+      }
+    }
+  ],
+
+  transform: [
+    /* 1. Ismeretlen jövedelmek kiszűrése */
+    {
+      filter: "datum.Incomes !== 'Refused' && datum.Incomes !== \"Don't know\""
+    },
+
+    /* 2. Jövedelem tisztítása */
+    {
+      calculate: "indexof(datum.Incomes, '150000') >= 0 ? '$150,000+' : datum.Incomes",
+      as: "IncomeClean"
+    },
+
+    /* 3. Formátum oszlopok kibontása */
+    {
+      fold: [
+        "Read any printed books during last 12months?",
+        "Read any audiobooks during last 12months?",
+        "Read any e-books during last 12months?"
+      ],
+      as: ["Format_Type", "Read_Status"]
+    },
+
+    /* 4. Csak az igenek */
+    { filter: "datum.Read_Status === 'Yes'" },
+
+    /* 5. Szép formátumnevek */
+    {
+      calculate:
+        "datum.Format_Type === 'Read any printed books during last 12months?' ? 'Papír alapú' : " +
+        "datum.Format_Type === 'Read any audiobooks during last 12months?' ? 'Hangoskönyv' : 'E-könyv'",
+      as: "Format"
+    },
+
+    /* 6. FORMÁTUM SZŰRÉS (EZ AZ ÚJ RÉSZ) */
+    {
+      filter: "FormatValaszto == null || datum.Format === FormatValaszto"
+    },
+
+    /* 7. Aggregálás */
+    {
+      aggregate: [{ op: "count", as: "count" }],
+      groupby: ["Age", "IncomeClean", "Format"]
+    }
+  ],
+
+  mark: {
+    type: "circle",
+    opacity: 0.65,
+    stroke: "#6a5d4d",
+    strokeWidth: 0.5
+  },
+
+  encoding: {
+    x: {
+      field: "Age",
+      type: "quantitative",
+      title: "Életkor"
+    },
+
+    y: {
+      field: "IncomeClean",
+      type: "ordinal",
+      title: "Jövedelmi sávok",
+      sort: [
+        "< $10,000",
+        "$10,000 to under $20,000",
+        "$20,000 to under $30,000",
+        "$30,000 to under $40,000",
+        "$40,000 to under $50,000",
+        "$50,000 to under $75,000",
+        "$75,000 to under $100,000",
+        "$100,000 to under $150,000",
+        "$150,000+"
+      ]
+    },
+
+    size: {
+      field: "count",
+      type: "quantitative",
+      title: "Olvasók száma",
+      scale: { range: [20, 800] }
+    },
+
+    color: {
+      field: "Format",
+      type: "nominal",
+      title: "Olvasási formátum",
+      scale: {
+        range: ["#c1a36e", "#6a5d4d", "#d0c4a8"]
+      }
+    },
+
+    tooltip: [
+      { field: "Age", type: "quantitative", title: "Életkor" },
+      { field: "IncomeClean", type: "nominal", title: "Jövedelem" },
+      { field: "Format", type: "nominal", title: "Formátum" },
+      { field: "count", type: "quantitative", title: "Olvasók száma" }
+    ]
+  },
+
+  config: {
+    view: { stroke: null },
+    axis: {
+      labelFont: "Georgia",
+      titleFont: "Georgia",
+      labelColor: "#4a4a4a",
+      titleColor: "#2b2b2b"
+    },
+    legend: {
+      labelFont: "Georgia",
+      titleFont: "Georgia"
+    }
+  }
+};
 
 
 
-        const embedOptions = {
-            actions: false,
-            renderer: "svg"
-        };
+/* 4. Hírek vs Magazinok - INTERAKTÍV */
+const chart4 = {
+    $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+    width: 700, height: 350,
+    data: { url: dataUrl },
+    params: [
+        {
+            name: "MediaSzűrő",
+            select: { type: "point", fields: ["Típus"] },
+            bind: { input: "radio", options: [null, "Hírek/Újság", "Magazinok"], labels: ["Mindkettő", "Hírek/Újságok", "Magazinok"], name: "Válassz: " }
+        }
+    ],
+    transform: [
+        { fold: ["Do you happen to read any daily news or newspapers?", "Do you happen to read any magazines or journals?"], as: ["Media_Type", "Read_Status"] },
+        { filter: "datum.Read_Status === 'Yes'" },
+        { calculate: "datum.Media_Type === 'Do you happen to read any daily news or newspapers?' ? 'Hírek/Újság' : 'Magazinok'", as: "Típus" },
+        { filter: { param: "MediaSzűrő" } }
+    ],
+    mark: { type: "line", point: true, interpolate: "monotone" },
+    encoding: {
+        x: { field: "Age", type: "quantitative", bin: { maxbins: 15 }, title: "Életkor" },
+        y: { aggregate: "count", title: "Olvasók száma" },
+        color: { field: "Típus", type: "nominal", scale: { range: ["#6a5d4d", "#c1a36e"] } }
+    }
+};
 
-        vegaEmbed("#chart", spec);
-        vegaEmbed("#chart2", spec2);
-        vegaEmbed("#chart3", spec3); 
-    </script>
+
+
+const chart5 = {
+  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+  width: 700, height: 350,
+  data: { url: dataUrl, format: { type: "csv" } },
+  params: [{
+    name: "legendaKiemeles",
+    select: { type: "point", fields: ["Beszerzes"] },
+    bind: "legend"
+  }],
+  transform: [
+    { filter: "datum['Last book you read, you…'] !== '8' && datum['Last book you read, you…'] !== 'Don’t know'" },
+    { calculate: "indexof(datum.Incomes, '150000') >= 0 ? '$150,000+' : datum.Incomes", as: "IncomeClean" },
+    { calculate: "datum['Last book you read, you…']", as: "Beszerzes" }
+  ],
+  mark: "bar",
+  encoding: {
+    x: { field: "IncomeClean", type: "nominal", sort: incomeOrder, title: "Jövedelem", axis: { labelAngle: -45 } },
+    y: { aggregate: "count", stack: "normalize", title: "Arány (%)" },
+    color: { field: "Beszerzes", type: "nominal", scale: { scheme: "browns" }, title: "Forrás" },
+    opacity: { condition: { param: "legendaKiemeles", value: 1 }, value: 0.15 },
+    tooltip: [{ field: "Beszerzes" }, { aggregate: "count", title: "Olvasók száma" }]
+  }
+};
+
+
+const chart6 = {
+  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+  width: 700, height: 350,
+  data: { url: dataUrl, format: { type: "csv" } },
+  mark: "rect",
+  encoding: {
+    x: {
+      field: "Age",
+      type: "quantitative",
+      bin: { maxbins: 20 },
+      title: "Életkor"
+    },
+    y: {
+      field: "Race",
+      type: "nominal",
+      title: "Etnikai háttér"
+    },
+    color: {
+      aggregate: "count",
+      type: "quantitative",
+      scale: { scheme: "browns" },
+      title: "Olvasók száma"
+    },
+    tooltip: [
+      { field: "Race", title: "Etnikum" },
+      { bin: "Age", title: "Korcsoport" },
+      { aggregate: "count", title: "Létszám" }
+    ]
+  },
+  config: {
+    view: { stroke: null },
+    axis: { labelLimit: 200 }
+  }
+};
+
+/* 7. Társadalmi mátrix (MÁSODIK, STABILABB INTERAKTÍV VÁLTOZAT) */
+const chart7 = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 700,
+  "height": 350,
+  "data": { "url": dataUrl, "format": { "type": "csv" } },
+  "transform": [
+    // Összeszámoljuk az adatokat egy lépésben
+    {
+      "aggregate": [{ "op": "count", "as": "c" }],
+      "groupby": ["Marital status?", "Employement"]
+    }
+  ],
+  "mark": {
+    "type": "rect",
+    "cursor": "help", // Jelezzük a felhasználónak, hogy interaktív
+    "stroke": "#4a2c2a",
+    "strokeWidth": 0 // Alapesetben nincs keret
+  },
+  "encoding": {
+    "x": {
+      "field": "Marital status?",
+      "type": "nominal",
+      "title": "Családi állapot"
+    },
+    "y": {
+      "field": "Employement",
+      "type": "nominal",
+      "title": "Foglalkoztatottság"
+    },
+    "color": {
+      "field": "c",
+      "type": "quantitative",
+      "scale": { "scheme": "browns" },
+      "title": "Létszám"
+    },
+    // Itt a trükk: a keret csak akkor villan fel, ha az egér felette van
+    "strokeWidth": {
+      "condition": { "param": "hover", "empty": false, "value": 3 },
+      "value": 0
+    },
+    // Az interaktív buborék itt jelenik meg
+    "tooltip": [
+      { "field": "Marital status?", "title": "Állapot" },
+      { "field": "Employement", "title": "Munka" },
+      { "field": "c", "title": "Olvasók száma" }
+    ]
+  },
+  "params": [
+    {
+      "name": "hover",
+      "select": { "type": "point", "on": "mouseover" }
+    }
+  ],
+  "config": {
+    "rect": { "cornerRadius": 2 }
+  }
+};
+
+const chart8 = {
+  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+  width: 400,
+  height: 400,
+  data: { url: dataUrl },
+  transform: [
+    {
+      aggregate: [{ op: "mean", field: "How many books did you read during last 12months?", as: "avg_books" }],
+      groupby: ["Race"]
+    }
+  ],
+  mark: { type: "arc", innerRadius: 50, stroke: "#fff" },
+  encoding: {
+    theta: { field: "avg_books", type: "quantitative", stack: true },
+    radius: { field: "avg_books", scale: { type: "sqrt", rangeMin: 20 }, type: "quantitative" },
+    color: { 
+      field: "Race", 
+      type: "nominal", 
+      scale: { scheme: "browns" },
+      legend: { orient: "right", title: "Etnikai háttér" }
+    },
+    tooltip: [
+      { field: "Race", title: "Csoport" },
+      { field: "avg_books", title: "Átlagos könyvszám", format: ".1f" }
+    ]
+  },
+  view: { stroke: null }
+};
+
+const chart9 = {
+  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+  width: 700,
+  height: 400,
+  padding: { bottom: 80 },
+  data: { url: dataUrl },
+  params: [
+    {
+      name: "ValasztottKategoria",
+      value: "Sex",
+      bind: { 
+        input: "select", 
+        options: ["Sex", "Education"], 
+        labels: ["Nem", "Végzettség"], 
+        name: "Csoportosítás: " 
+      }
+    }
+  ],
+  transform: [
+    // Trükk: a választott oszlop értékét átmásoljuk egy fix nevű mezőbe
+    { calculate: "datum[ValasztottKategoria]", as: "Csoport" },
+    { 
+      calculate: "datum['How many books did you read during last 12months?'] == 0 ? 'Nem olvas' : 'Olvas'", 
+      as: "Statusz" 
+    }
+  ],
+  mark: { type: "bar", cornerRadiusTopLeft: 5, cornerRadiusTopRight: 5 },
+  encoding: {
+    x: { 
+  field: "Csoport", 
+  type: "nominal", 
+  title: "Kiválasztott demográfiai csoport",
+  axis: {
+    labelAngle: -30,
+    labelLimit: 160,
+    labelPadding: 10
+  }
+},
+    y: { 
+      aggregate: "count", 
+      type: "quantitative", 
+      stack: "normalize", // Arányokat mutatunk (%)
+      title: "Megoszlás aránya" 
+    },
+    color: { 
+      field: "Statusz", 
+      type: "nominal", 
+      scale: { range: ["#4a2c2a", "#d0c4a8"] },
+      title: "Olvasási státusz"
+    },
+    tooltip: [
+      { field: "Csoport", title: "Kategória" },
+      { field: "Statusz", title: "Állapot" },
+      { aggregate: "count", title: "Fő" }
+    ]
+  },
+  config: {
+    view: { stroke: null }
+  }
+};
+
+
+/* 10. Kor × olvasási formátum – RIDGELINE (JOY PLOT) */
+const chart10 = {
+  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+
+  width: 700,
+  height: 420,
+
+  data: {
+    url: dataUrl,
+    format: { type: "csv" }
+  },
+
+  transform: [
+    /* formátum oszlopok kibontása */
+    {
+      fold: [
+        "Read any printed books during last 12months?",
+        "Read any e-books during last 12months?",
+        "Read any audiobooks during last 12months?"
+      ],
+      as: ["FormatRaw", "ReadStatus"]
+    },
+
+    /* csak az igenek */
+    { filter: "datum.ReadStatus === 'Yes'" },
+
+    /* szép formátumnevek */
+    {
+      calculate:
+        "datum.FormatRaw === 'Read any printed books during last 12months?' ? 'Papírkönyv' : " +
+        "datum.FormatRaw === 'Read any e-books during last 12months?' ? 'E-könyv' : 'Hangoskönyv'",
+      as: "Format"
+    },
+
+    /* kor binelés */
+    {
+      bin: { maxbins: 20 },
+      field: "Age",
+      as: ["AgeBinStart", "AgeBinEnd"]
+    },
+
+    /* aggregálás */
+    {
+      aggregate: [{ op: "count", as: "count" }],
+      groupby: ["Format", "AgeBinStart", "AgeBinEnd"]
+    }
+  ],
+
+  mark: {
+    type: "area",
+    interpolate: "monotone",
+    opacity: 0.85
+  },
+
+  encoding: {
+    x: {
+      field: "AgeBinStart",
+      type: "quantitative",
+      title: "Életkor"
+    },
+
+    y: {
+      field: "count",
+      type: "quantitative",
+      title: null,
+      axis: null
+    },
+
+    color: {
+      field: "Format",
+      type: "nominal",
+      scale: {
+        range: ["#c1a36e", "#6a5d4d", "#d0c4a8"]
+      },
+      legend: {
+        orient: "top",
+        title: "Olvasási formátum"
+      }
+    },
+
+    row: {
+      field: "Format",
+      type: "nominal",
+      title: null,
+      header: {
+        labelFont: "Georgia",
+        labelFontSize: 14,
+        labelColor: "#2b2b2b"
+      }
+    },
+
+    tooltip: [
+      { field: "Format", title: "Formátum" },
+      { field: "AgeBinStart", title: "Életkor (tól)" },
+      { field: "count", title: "Olvasók száma" }
+    ]
+  },
+
+  config: {
+    view: { stroke: null },
+    axis: {
+      labelFont: "Georgia",
+      titleFont: "Georgia"
+    }
+  }
+};
+
+
+/* Embed */
+vegaEmbed("#chart1", chart1, { actions: false });
+vegaEmbed("#chart2", chart2, { actions: false });
+vegaEmbed("#chart3", chart3, { actions: false });
+vegaEmbed("#chart4", chart4, { actions: false });
+vegaEmbed("#chart5", chart5, { actions: false });
+vegaEmbed("#chart6", chart6, { actions: false });
+vegaEmbed("#chart7", chart7, { actions: false });
+vegaEmbed("#chart8", chart8, { actions: false });
+vegaEmbed("#chart9", chart9, { actions: false });
+vegaEmbed("#chart10", chart10, { actions: false });
+
+</script>
+
+
 </body>
-
 </html>
